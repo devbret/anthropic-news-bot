@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>News Bot Timeline</title>
+    <link rel="stylesheet" href="main.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="site-title">
+        <h1>News Bot Timeline</h1>
+      </div>
+      <div class="header-actions">
+        <div id="run-picker" class="run-picker" hidden>
+          <button
+            type="button"
+            id="run-picker-toggle"
+            class="ghost-button run-picker-toggle"
+            aria-haspopup="true"
+            aria-expanded="false"
+            title="Choose one run, or several to compare"
+          >
+            Choose runs&hellip;
+          </button>
+          <div id="run-picker-menu" class="run-picker-menu" hidden>
+            <div id="run-picker-list" class="run-picker-list"></div>
+            <p
+              id="run-picker-note"
+              class="run-picker-note"
+              role="status"
+              aria-live="polite"
+              hidden
+            ></p>
+          </div>
+        </div>
+        <button
+          type="button"
+          id="theme-toggle"
+          class="ghost-button"
+          title="Cycle color theme"
+        >
+          Theme: Auto
+        </button>
+      </div>
+    </header>
+
+    <main>
+      <section id="empty-state" class="empty-panel">
+        <p id="empty-message">Loading runs&hellip;</p>
+      </section>
+
+      <section id="dashboard" hidden>
+        <div id="summary" class="summary"></div>
+
+        <div class="controls">
+          <input
+            type="search"
+            id="search"
+            placeholder="Filter stories by title, source or text..."
+          />
+          <select id="type-filter" title="Which stories to include">
+            <option value="all">All stories</option>
+            <option value="hot">Super-hot only</option>
+          </select>
+        </div>
+
+        <nav class="tabs" role="tablist" aria-label="Sections">
+          <button
+            type="button"
+            role="tab"
+            id="tab-results"
+            data-tab="results"
+            aria-selected="true"
+          >
+            Results
+            <span id="results-badge" class="tab-badge">0</span>
+          </button>
+          <button
+            type="button"
+            role="tab"
+            id="tab-analytics"
+            data-tab="analytics"
+            aria-selected="false"
+          >
+            Analytics
+          </button>
+        </nav>
+
+        <section
+          id="panel-results"
+          class="panel"
+          role="tabpanel"
+          aria-labelledby="tab-results"
+        >
+          <p id="result-count" class="result-count"></p>
+          <ol id="stories" class="stories"></ol>
+          <div class="pager" id="pager" hidden>
+            <button type="button" id="show-more" class="ghost-button">
+              Show more
+            </button>
+            <button type="button" id="show-all" class="ghost-button">
+              Show all
+            </button>
+          </div>
+        </section>
+
+        <section
+          id="panel-analytics"
+          class="panel"
+          role="tabpanel"
+          aria-labelledby="tab-analytics"
+          hidden
+        >
+          <section class="chart-card analysis-card">
+            <div class="analysis-head">
+              <div>
+                <h3 class="chart-title">
+                  Claude's Read On The Super-Hot Stories
+                </h3>
+              </div>
+              <button
+                type="button"
+                id="analyze-button"
+                class="primary-button"
+                disabled
+              >
+                Analyze super-hot stories with Claude
+              </button>
+            </div>
+            <p
+              id="analysis-status"
+              class="chart-note"
+              role="status"
+              aria-live="polite"
+            ></p>
+            <div id="analysis-output" class="analysis-output" hidden></div>
+          </section>
+          <div id="charts" class="charts"></div>
+        </section>
+      </section>
+    </main>
+
+    <div id="tooltip" class="tooltip" role="status" hidden></div>
+    <script src="vendor/d3.v7.min.js"></script>
+    <script src="vendor/d3.layout.cloud.js"></script>
+    <script src="main.js"></script>
+  </body>
+</html>
