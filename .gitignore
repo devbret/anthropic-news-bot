@@ -1,6 +1,5 @@
 __pycache__
+.vscode
 venv
 .env
-output/*.json
-output/*.txt
-output/*.log
+output/
