@@ -2,7 +2,7 @@
 
 ![Screenshot of the Analytics tab after a run.](https://hosting.photobucket.com/bbcfb0d4-be20-44a0-94dc-65bff8947cf2/111dc30d-0b62-497f-b901-48adaa0be702.png)
 
-AI-powered news discovery tool which explores topics via APIs by using Anthropic’s Claude model and surfaces the most significant stories in a dashboard.
+AI-powered news discovery tool which explores topics via APIs by using Anthropic's Claude model and surfaces the most significant stories in a dashboard.
 
 ## Application Overview
 
