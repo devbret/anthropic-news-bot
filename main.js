@@ -184,7 +184,7 @@ function updateRunPickerUI() {
 
   let label;
   if (!selected.size) {
-    label = "Choose runs…";
+    label = "Choose runs...";
   } else if (selected.size === 1) {
     const run = runById(state.selectedRunIds[0]);
     label = run ? runShortLabel(run) : "1 run selected";
@@ -281,7 +281,7 @@ async function fetchRun(run) {
       title: s.title || "(untitled)",
       source: s.source || "Unknown source",
       story: (s.story || "")
-        .replace(/\s*(?:\.{3}|…)?\s*\[\+?\d+\s*chars\]\s*$/, "")
+        .replace(/\s*(?:\.{3}|\u2026)?\s*\[\+?\d+\s*chars\]\s*$/, "")
         .trim(),
       url: s.url || "",
       time: Date.parse(s.timestamp || ""),
@@ -805,9 +805,9 @@ function buildStoryTimeline(stories) {
         { value: s.source, label: "source" },
       ];
       const subParts = [];
-      if (s.hot) subParts.push("★ Super-hot story");
+      if (s.hot) subParts.push("Super-hot story");
       if (safeHref(s.url)) subParts.push("Click or press Enter to open");
-      showTooltip(s.title, rows, cx, cy, subParts.join(" · "));
+      showTooltip(s.title, rows, cx, cy, subParts.join(" | "));
     };
 
     const findAt = (mx, my) => {
@@ -1592,7 +1592,7 @@ function buildHotRateChart(stories) {
           { color: "var(--gradient-hot)", value: row.hot },
           { color: "var(--series-muted)", value: row.rest },
         ],
-        totalLabel: `${formatNumber(row.hot)}/${formatNumber(row.total)} · ${pct}%`,
+        totalLabel: `${formatNumber(row.hot)}/${formatNumber(row.total)} | ${pct}%`,
         tooltipTitle: runLabel(row.run),
         tooltipRows: [
           {
@@ -1718,8 +1718,8 @@ function computeTopTerms(stories, limit) {
   for (const s of stories) {
     const text = `${s.title} ${s.story}`.toLowerCase();
     const seen = new Set();
-    for (const match of text.matchAll(/[a-z][a-z'’-]{2,}/g)) {
-      const word = match[0].replace(/^['’-]+|['’-]+$/g, "");
+    for (const match of text.matchAll(/[a-z][a-z'\u2019-]{2,}/g)) {
+      const word = match[0].replace(/^['\u2019-]+|['\u2019-]+$/g, "");
       if (word.length < 3 || STOPWORDS.has(word) || seen.has(word)) continue;
       seen.add(word);
       counts.set(word, (counts.get(word) || 0) + 1);
@@ -1913,7 +1913,7 @@ function renderCharts(retryFailedLogs = true) {
     placeholder.appendChild(
       el("h3", "chart-title", "Articles Per Search Keyword"),
     );
-    placeholder.appendChild(el("p", "chart-note", "Loading search logs…"));
+    placeholder.appendChild(el("p", "chart-note", "Loading search logs..."));
     half.push(placeholder);
     const runs = state.loadedRuns.map((entry) => entry.run);
     Promise.allSettled(runs.map((run) => loadRunLog(run))).then(() => {
@@ -1973,7 +1973,7 @@ function buildCard(story) {
   if (story.story) {
     const text =
       story.story.length > 280
-        ? `${story.story.slice(0, 280).trimEnd()}…`
+        ? `${story.story.slice(0, 280).trimEnd()}...`
         : story.story;
     bodyEl.appendChild(el("p", "card-desc", text));
   }
@@ -2079,7 +2079,7 @@ function updateAnalysisButton() {
   if (!els.analyzeButton) return;
   const count = hotStoriesInView().length;
   els.analyzeButton.textContent = analysisRunning
-    ? "Analyzing…"
+    ? "Analyzing..."
     : `Analyze ${formatNumber(count)} super-hot ${count === 1 ? "story" : "stories"} with Claude`;
   els.analyzeButton.disabled = !analysisRunning && count === 0;
   els.analyzeButton.setAttribute("aria-busy", String(analysisRunning));
@@ -2175,7 +2175,7 @@ async function runAnalysis() {
 
   analysisRunning = true;
   updateAnalysisButton();
-  setAnalysisStatus("Collecting the agent's notes…");
+  setAnalysisStatus("Collecting the agent's notes...");
   els.analysisOutput.hidden = false;
   els.analysisOutput.textContent = "";
 
@@ -2207,7 +2207,7 @@ async function runAnalysis() {
       })),
     };
 
-    setAnalysisStatus("Claude is reading the stories…");
+    setAnalysisStatus("Claude is reading the stories...");
     let res;
     try {
       res = await fetch("/api/analyze", {

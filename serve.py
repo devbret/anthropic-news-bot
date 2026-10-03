@@ -102,9 +102,32 @@ class DashboardHandler(SimpleHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(body)
 
+    def _local_hosts(self):
+        port = self.server.server_address[1]
+        return {f"{name}:{port}" for name in ("localhost", "127.0.0.1")}
+
+    def _request_is_local(self):
+        allowed = self._local_hosts()
+        if (self.headers.get("Host") or "").lower() not in allowed:
+            return False
+        origin = self.headers.get("Origin")
+        if origin is None:
+            return True
+        parts = urlsplit(origin)
+        return parts.scheme == "http" and parts.netloc.lower() in allowed
+
     def do_POST(self):
         if self.path != "/api/analyze":
             self._send_json(404, {"error": "Unknown endpoint"})
+            return
+
+        if not self._request_is_local():
+            self._send_json(403, {"error": "Cross-origin requests are not allowed"})
+            return
+
+        content_type = (self.headers.get("Content-Type") or "").split(";")[0].strip()
+        if content_type.lower() != "application/json":
+            self._send_json(415, {"error": "Content-Type must be application/json"})
             return
 
         try:
